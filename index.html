@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BATUHIME | Legacy Army</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #030303;
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden; /* Karın ve yansımanın taşmasını engeller */
+        }
+
+        /* --- 1. YAVAŞ YAĞAN KAR EFEKTİ (Multiple Backgrounds ile) --- */
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Üzerine tıklanamaz */
+            
+            /* Farklı boyutlarda ve hızlarda 3 katmanlı kar taneleri */
+            background-image: 
+                radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 1px, transparent 2px),
+                radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 1.5px, transparent 2.5px),
+                radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 2px, transparent 3px);
+            background-size: 550px 550px, 400px 400px, 300px 300px;
+            animation: snowFall 20s linear infinite;
+        }
+
+        @keyframes snowFall {
+            0% {
+                background-position: 0 0, 0 0, 0 0;
+            }
+            100% {
+                /* Her katmanın Y ekseninde farklı hızlarda hareket etmesi */
+                background-position: 0 550px, 0 800px, 0 1200px;
+            }
+        }
+
+        /* --- 2. SAĞDAN SOLA KAYAN YANSIMA EFEKTİ --- */
+        .reflection-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* Yansımayı oluşturacak şeffaf, parlayan dikey çizgi */
+        .reflection-bar::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 100%; /* Sağdan başlar */
+            width: 300px;
+            height: 200%;
+            background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.04) 50%, transparent 100%);
+            transform: rotate(-30deg); /* Şık bir eğim verir */
+            animation: moveshine 15s ease-in-out infinite;
+        }
+
+        @keyframes moveshine {
+            0% { left: 100%; opacity: 0; }
+            5% { opacity: 1; }
+            10% { left: -300px; opacity: 1; }
+            15% { left: -300px; opacity: 0; }
+            100% { left: -300px; opacity: 0; }
+        }
+
+        /* Arkadaki yumuşak neon yeşil aydınlatma */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 255, 65, 0.05) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            z-index: 1;
+            animation: fadeInContainer 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInContainer {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 3. PROFiL FOTOĞRAFINI LİNKLEME --- */
+        .profile-pic-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            position: relative;
+            /* Tıklanabilir alan için */
+            border-radius: 50%; 
+            overflow: hidden; 
+            
+            /* Tıklama efekti: pulse buraya taşıyoruz */
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 2px solid rgba(0, 255, 65, 0.3);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        /* Hover durumunda fotoğrafın tepkisi */
+        .profile-pic-link:hover .profile-pic {
+            border-color: #00ff41;
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px rgba(0, 255, 65, 0.1); }
+            100% { box-shadow: 0 0 40px rgba(0, 255, 65, 0.5); }
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #ffffff, #00ff41);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: #888;
+            font-size: 1rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        /* --- Modern Link Butonları (Öncekiyle Aynı) --- */
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .link-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 18px 25px;
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #00ff41;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            
+            opacity: 0;
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .link-btn:nth-child(1) { animation-delay: 0.2s; }
+        .link-btn:nth-child(2) { animation-delay: 0.35s; }
+        .link-btn:nth-child(3) { animation-delay: 0.5s; }
+        .link-btn:nth-child(4) { animation-delay: 0.65s; }
+
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .link-btn i {
+            font-size: 1.5rem;
+            color: #888;
+            transition: all 0.4s ease;
+        }
+
+        .link-btn .text {
+            flex-grow: 1;
+            text-align: left;
+            margin-left: 20px;
+            letter-spacing: 1px;
+            transition: all 0.4s ease;
+        }
+
+        .link-btn .arrow {
+            font-size: 1rem;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.4s ease;
+            color: #00ff41;
+        }
+
+        /* --- Hover (Üzerine Gelme) Şatafatı --- */
+        .link-btn:hover {
+            background: rgba(0, 255, 65, 0.08);
+            border-color: rgba(0, 255, 65, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 255, 65, 0.15);
+            transform: translateX(8px);
+            cursor: pointer;
+        }
+
+        .link-btn:hover i {
+            color: #00ff41;
+            transform: scale(1.1);
+        }
+
+        .link-btn:hover .text {
+            color: #00ff41;
+        }
+
+        .link-btn:hover .arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reflection-bar"></div>
+
+    <div class="container">
+        <a href="https://kick.com/batuhime" class="profile-pic-link" target="_blank">
+            <img src="profil.png" alt="BATUHIME" class="profile-pic">
+        </a>
+        
+        <h1>BATUHIME</h1>
+        <p>Legacy Army</p>
+
+        <div class="links-container">
+            <a href="https://kick.com/batuhime" class="link-btn" target="_blank">
+                <i class="fa-brands fa-kick"></i>
+                <span class="text">KICK YAYINLARI</span>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </a>
+
+            <a href="https://www.youtube.com/@Batuhime" class="link-btn" target="_blank">
+                <i class="fa-brands fa-youtube"></i>
+                <span class="text">YOUTUBE KANALI</span>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </a>
+
+            <a href="https://discord.gg/WdDfJJwAxu" class="link-btn" target="_blank">
+                <i class="fa-brands fa-discord"></i>
+                <span class="text">DISCORD SUNUCUSU</span>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </a>
+
+            <a href="https://instagram.com/batuhime" class="link-btn" target="_blank">
+                <i class="fa-brands fa-instagram"></i>
+                <span class="text">INSTAGRAM</span>
+                <i class="fa-solid fa-chevron-right arrow"></i>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BATUHIME | Legacy Army</title>
+    <title>BATUHIME | Legacy Army Karargahı</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
+        /* --- Temel Ayarlar --- */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -22,69 +23,60 @@
             align-items: center;
             min-height: 100vh;
             position: relative;
-            overflow: hidden; /* Karın ve yansımanın taşmasını engeller */
+            overflow-x: hidden;
         }
 
-        /* --- 1. YAVAŞ YAĞAN KAR EFEKTİ (Multiple Backgrounds ile) --- */
-        body::after {
-            content: '';
+        /* --- 1. Cyber Arka Plan (Geliştirilmiş Izgara ve Kar) --- */
+        .background-effects {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* Üzerine tıklanamaz */
-            
-            /* Farklı boyutlarda ve hızlarda 3 katmanlı kar taneleri */
-            background-image: 
-                radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 1px, transparent 2px),
-                radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 1.5px, transparent 2.5px),
-                radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 2px, transparent 3px);
-            background-size: 550px 550px, 400px 400px, 300px 300px;
-            animation: snowFall 20s linear infinite;
-        }
-
-        @keyframes snowFall {
-            0% {
-                background-position: 0 0, 0 0, 0 0;
-            }
-            100% {
-                /* Her katmanın Y ekseninde farklı hızlarda hareket etmesi */
-                background-position: 0 550px, 0 800px, 0 1200px;
-            }
-        }
-
-        /* --- 2. SAĞDAN SOLA KAYAN YANSIMA EFEKTİ --- */
-        .reflection-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
             pointer-events: none;
+            z-index: -2;
             overflow: hidden;
         }
 
-        /* Yansımayı oluşturacak şeffaf, parlayan dikey çizgi */
-        .reflection-bar::after {
+        /* Radar Izgarası */
+        .background-effects::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: 100%; /* Sağdan başlar */
-            width: 300px;
-            height: 200%;
-            background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.04) 50%, transparent 100%);
-            transform: rotate(-30deg); /* Şık bir eğim verir */
-            animation: moveshine 15s ease-in-out infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: gridMove 20s linear infinite;
         }
 
-        @keyframes moveshine {
-            0% { left: 100%; opacity: 0; }
-            5% { opacity: 1; }
-            10% { left: -300px; opacity: 1; }
-            15% { left: -300px; opacity: 0; }
-            100% { left: -300px; opacity: 0; }
+        /* Yavaş Süzülen Kar */
+        .background-effects::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 1px, transparent 1.5px),
+                radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 1.5px, transparent 2.5px),
+                radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 2px, transparent 3px);
+            background-size: 500px 500px, 350px 350px, 250px 250px;
+            animation: snowFall 25s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 60px 60px; }
+        }
+
+        @keyframes snowFall {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 500px, 0 800px, 0 1200px; }
         }
 
         /* Arkadaki yumuşak neon yeşil aydınlatma */
@@ -96,17 +88,21 @@
             transform: translate(-50%, -50%);
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(0, 255, 65, 0.05) 0%, rgba(0,0,0,0) 70%);
+            background: radial-gradient(circle, rgba(0, 255, 65, 0.04) 0%, rgba(0,0,0,0) 70%);
             z-index: -1;
             pointer-events: none;
         }
 
-        .container {
+        /* --- Ana Konteyner --- */
+        .main-container {
             width: 90%;
-            max-width: 420px;
+            max-width: 480px;
             text-align: center;
             z-index: 1;
             animation: fadeInContainer 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Bölümler arası boşluk */
         }
 
         @keyframes fadeInContainer {
@@ -114,34 +110,58 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- 3. PROFiL FOTOĞRAFINI LİNKLEME --- */
+        /* --- Ortak Kart Tasarımı (Glassmorphism + Neon Border) --- */
+        .card {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 255, 65, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0; /* Animasyon için başlangıç */
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 255, 65, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 255, 65, 0.1);
+        }
+
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 2. Profil Bölümü (Hero Card) --- */
+        .profile-card {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            animation-delay: 0.1s; /* İlk yüklenecek */
+        }
+
         .profile-pic-link {
-            display: inline-block;
-            margin-bottom: 20px;
             text-decoration: none;
             position: relative;
-            /* Tıklanabilir alan için */
-            border-radius: 50%; 
-            overflow: hidden; 
-            
-            /* Tıklama efekti: pulse buraya taşıyoruz */
+            border-radius: 50%;
+            overflow: hidden;
             animation: pulseGlow 3s infinite alternate;
         }
 
         .profile-pic {
-            width: 120px;
-            height: 120px;
+            width: 110px;
+            height: 110px;
             object-fit: cover;
             border: 2px solid rgba(0, 255, 65, 0.3);
             border-radius: 50%;
             transition: all 0.3s ease;
         }
 
-        /* Hover durumunda fotoğrafın tepkisi */
         .profile-pic-link:hover .profile-pic {
             border-color: #00ff41;
             transform: scale(1.05);
-            cursor: pointer;
         }
 
         @keyframes pulseGlow {
@@ -150,30 +170,78 @@
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 900;
             letter-spacing: 3px;
-            margin-bottom: 5px;
             text-transform: uppercase;
             background: linear-gradient(90deg, #ffffff, #00ff41);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        p {
+        .legacy-army-tag {
             color: #888;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 300;
             letter-spacing: 2px;
-            margin-bottom: 40px;
             text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* --- Modern Link Butonları (Öncekiyle Aynı) --- */
-        .links-container {
+        .legacy-army-tag::before,
+        .legacy-army-tag::after {
+            content: '';
+            width: 20px;
+            height: 1px;
+            background-color: #00ff41;
+        }
+
+        /* --- 3. YENİ BÖLÜM: Hakkımda (About Card) --- */
+        .about-card {
+            padding: 25px;
+            text-align: left;
+            animation-delay: 0.25s; /* Gecikmeli yükleme */
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card-header i {
+            color: #00ff41;
+            font-size: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .about-text {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        /* --- 4. Sosyal Bağlantılar Bölümü (Links Card) --- */
+        .links-card {
+            padding: 20px;
+            animation-delay: 0.4s; /* En son yüklenecek */
+        }
+
+        .links-grid {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         .link-btn {
@@ -181,36 +249,23 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            padding: 18px 25px;
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(10px);
+            padding: 16px 20px;
+            background: rgba(20, 20, 20, 0.4);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            /* İmza sol yeşil çizgi */
+            border-left: 3px solid #00ff41;
             color: #ffffff;
             text-decoration: none;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 500;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-left: 4px solid #00ff41;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
-            
-            opacity: 0;
-            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .link-btn:nth-child(1) { animation-delay: 0.2s; }
-        .link-btn:nth-child(2) { animation-delay: 0.35s; }
-        .link-btn:nth-child(3) { animation-delay: 0.5s; }
-        .link-btn:nth-child(4) { animation-delay: 0.65s; }
-
-        @keyframes slideUpFade {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
         }
 
         .link-btn i {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: #888;
             transition: all 0.4s ease;
         }
@@ -218,25 +273,25 @@
         .link-btn .text {
             flex-grow: 1;
             text-align: left;
-            margin-left: 20px;
-            letter-spacing: 1px;
+            margin-left: 15px;
+            letter-spacing: 0.5px;
             transition: all 0.4s ease;
         }
 
         .link-btn .arrow {
-            font-size: 1rem;
+            font-size: 0.9rem;
             opacity: 0;
             transform: translateX(-10px);
             transition: all 0.4s ease;
             color: #00ff41;
         }
 
-        /* --- Hover (Üzerine Gelme) Şatafatı --- */
+        /* Hover (Üzerine Gelme) Efekti */
         .link-btn:hover {
-            background: rgba(0, 255, 65, 0.08);
-            border-color: rgba(0, 255, 65, 0.4);
-            box-shadow: 0 10px 25px rgba(0, 255, 65, 0.15);
-            transform: translateX(8px);
+            background: rgba(0, 255, 65, 0.05);
+            border-color: rgba(0, 255, 65, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.1);
+            transform: translateX(5px);
             cursor: pointer;
         }
 
@@ -257,41 +312,63 @@
 </head>
 <body>
 
-    <div class="reflection-bar"></div>
+    <div class="background-effects"></div>
 
-    <div class="container">
-        <a href="https://kick.com/batuhime" class="profile-pic-link" target="_blank">
-            <img src="profil.png" alt="BATUHIME" class="profile-pic">
-        </a>
+    <div class="main-container">
         
-        <h1>BATUHIME</h1>
-        <p>Legacy Army</p>
-
-        <div class="links-container">
-            <a href="https://kick.com/batuhime" class="link-btn" target="_blank">
-                <i class="fa-brands fa-kick"></i>
-                <span class="text">KICK YAYINLARI</span>
-                <i class="fa-solid fa-chevron-right arrow"></i>
+        <header class="profile-card card">
+            <a href="https://kick.com/batuhime" class="profile-pic-link" target="_blank">
+                <img src="profil.jpg" alt="BATUHIME" class="profile-pic">
             </a>
+            <h1>BATUHIME</h1>
+            <div class="legacy-army-tag">Legacy Army Karargahı</div>
+        </header>
 
-            <a href="https://www.youtube.com/@Batuhime" class="link-btn" target="_blank">
-                <i class="fa-brands fa-youtube"></i>
-                <span class="text">YOUTUBE KANALI</span>
-                <i class="fa-solid fa-chevron-right arrow"></i>
-            </a>
+        <section class="about-card card">
+            <div class="card-header">
+                <i class="fa-solid fa-terminal"></i>
+                <h2 class="card-title">HAKKIMDA / INFO</h2>
+            </div>
+            <p class="about-text">
+                Legacy Army'nin kurucusu ve lideri. Teknoloji, espor ve topluluk yönetimi tutkunu. 
+                Burayı kendi hikayenle doldur, dostum! Kendinden bahset, ne yaptığını, neleri sevdiğini, 
+                hangi botları kodladığını veya yayınlarında neler beklediklerini anlatabilirsin. 
+                Bu bölüm, topluluğunla daha derin bir bağ kurmanı sağlayacak.
+            </p>
+        </section>
 
-            <a href="https://discord.gg/WdDfJJwAxu" class="link-btn" target="_blank">
-                <i class="fa-brands fa-discord"></i>
-                <span class="text">DISCORD SUNUCUSU</span>
-                <i class="fa-solid fa-chevron-right arrow"></i>
-            </a>
+        <section class="links-card card">
+            <div class="card-header">
+                <i class="fa-solid fa-link"></i>
+                <h2 class="card-title">BAĞLANTILAR / LINKS</h2>
+            </div>
+            <div class="links-grid">
+                <a href="https://kick.com/batuhime" class="link-btn" target="_blank">
+                    <i class="fa-brands fa-kick"></i>
+                    <span class="text">KICK YAYINLARI</span>
+                    <i class="fa-solid fa-chevron-right arrow"></i>
+                </a>
 
-            <a href="https://instagram.com/batuhime" class="link-btn" target="_blank">
-                <i class="fa-brands fa-instagram"></i>
-                <span class="text">INSTAGRAM</span>
-                <i class="fa-solid fa-chevron-right arrow"></i>
-            </a>
-        </div>
+                <a href="https://www.youtube.com/@Batuhime" class="link-btn" target="_blank">
+                    <i class="fa-brands fa-youtube"></i>
+                    <span class="text">YOUTUBE KANALI</span>
+                    <i class="fa-solid fa-chevron-right arrow"></i>
+                </a>
+
+                <a href="https://discord.gg/WdDfJJwAxu" class="link-btn" target="_blank">
+                    <i class="fa-brands fa-discord"></i>
+                    <span class="text">DISCORD SUNUCUSU</span>
+                    <i class="fa-solid fa-chevron-right arrow"></i>
+                </a>
+
+                <a href="https://instagram.com/batuhime" class="link-btn" target="_blank">
+                    <i class="fa-brands fa-instagram"></i>
+                    <span class="text">INSTAGRAM PROFiLi</span>
+                    <i class="fa-solid fa-chevron-right arrow"></i>
+                </a>
+            </div>
+        </section>
+
     </div>
 
 </body>
